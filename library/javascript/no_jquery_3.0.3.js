@@ -284,6 +284,24 @@ Object.defineProperty(NJ.prototype, 'length', {
 
   NJ.prototype.removeCss = function (prop) { return this._each(function () { this.style.removeProperty(prop); }); };
   NJ.prototype.computed = function (prop) { return this.elements[0] ? getComputedStyle(this.elements[0]).getPropertyValue(prop) : undefined; };
+  NJ.prototype.getMaxZIndex = function () {
+    const elements = document.getElementsByTagName("*");
+    let maxZ = 0;
+
+    for (let i = 0; i < elements.length; i++) {
+        const z = window.getComputedStyle(elements[i]).zIndex;
+
+        // zIndex kann "auto", "undefined", "0" oder eine Zahl sein
+        if (z !== "auto") {
+            const zi = parseInt(z, 10);
+            if (!isNaN(zi) && zi > maxZ) {
+                maxZ = zi;
+            }
+        }
+    }
+
+    return maxZ;
+}
 
   // -------------------------
   // Events
@@ -761,7 +779,7 @@ NJ.prototype.els = function (p) {
   NJ.prototype.sty = NJ.prototype.css;
   NJ.prototype.sRP = NJ.prototype.removeCss;
   NJ.prototype.gCS = NJ.prototype.computed;
-
+  NJ.prototype.gMZ = NJ.prototype.getMaxZIndex
   // geometry
   NJ.prototype.gRe = NJ.prototype.getRect;
   NJ.prototype.rEl = NJ.prototype.remove;
