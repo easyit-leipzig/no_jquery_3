@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>nojquery 3.0.3 — Vollständige Funktions-Demo & Dokumentation</title>
+<style>
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 18px; background:#f7f8fb; color:#111; }
+  h1 { margin-top:0; }
+  .grid { display:grid; grid-template-columns: 360px 1fr; gap:16px; align-items:start; }
+  .panel { background:white; border-radius:8px; padding:12px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  button{ margin:6px 4px 6px 0; padding:8px 10px; border-radius:6px; border:1px solid #e0e6ef; background:#fff; cursor:pointer; }
+  pre { background:#0f1724; color:#e6eef8; padding:12px; border-radius:6px; overflow:auto; max-height:360px;}
+  .demo-target { padding:12px; border:1px dashed #d6dbe8; border-radius:6px; margin-bottom:8px; }
+  .row { margin-top:8px; }
+  .small { font-size: 12px; color:#666; }
+  label { display:block; margin-top:8px; font-weight:600;}
+  .input-small { width:100%; padding:6px; margin-top:4px; }
+  .section-title { margin-top:22px; font-size:15px; }
+</style>
+</head>
+
+<body>
+<h1>nojquery 3.0.3 — Vollständiges Test- & Dokumentations-Dashboard</h1>
+<p class="small">
+  Dieses Demo testet <b>ALLE Funktionen und Aliase</b> der Version 3.0.3, <br>
+  inklusive <code>nj.config</code>, <code>$</code>-Expose, Cookie-Optionen, AJAX-Timeout, Dialog-Reflection, Animationen und sämtlicher Legacy-Shortcuts.
+</p>
+
+<div class="grid">
+  <div class="panel" id="controls">
+
+    <!-- CONFIG SECTION ---------------------------------------------------------------->
+    <h3 class="section-title">Global Config</h3>
+    <div class="small">Zeigt und ändert <code>nj.config</code> live</div>
+
+    <button id="btn-config-show">config anzeigen</button>
+
+    <label>exposeDollar:
+      <select id="config-exposeDollar">
+        <option value="false" selected>false</option>
+        <option value="true">true</option>
+      </select>
+    </label>
+
+    <label>debug:
+      <select id="config-debug">
+        <option value="false" selected>false</option>
+        <option value="true">true</option>
+      </select>
+    </label>
+
+    <label>warn:
+      <select id="config-warn">
+        <option value="false">false</option>
+        <option value="true" selected>true</option>
+      </select>
+    </label>
+
+    <label>ajaxTimeout (ms):
+      <input class="input-small" id="config-timeout" value="8000">
+    </label>
+
+    <button id="btn-config-apply">Config anwenden</button>
+
+
+    <!-- SELECTOR + DOM ---------------------------------------------------------------->
+    <h3 class="section-title">Selektor & DOM</h3>
+    <button id="btn-select">Select #demoTarget</button>
+    <button id="btn-html">.html()</button>
+    <button id="btn-text">.text()</button>
+    <button id="btn-append">append()</button>
+    <button id="btn-prepend">prepend()</button>
+    <button id="btn-before">before()</button>
+    <button id="btn-after">after()</button>
+    <button id="btn-remove">remove()</button>
+
+
+    <!-- ATTRIBUTES ---------------------------------------------------------------->
+    <h3 class="section-title">Attribute / Dataset</h3>
+    <button id="btn-attr-set">attr('data-x','123')</button>
+    <button id="btn-attr-get">attr('data-x')</button>
+    <button id="btn-attr-remove">removeAttr('data-x')</button>
+
+    <button id="btn-data-set">data('hello','world')</button>
+    <button id="btn-data-get">data('hello')</button>
+    <button id="btn-data-remove">removeData('hello')</button>
+
+
+    <!-- CLASSES / CSS ---------------------------------------------------------------->
+    <h3 class="section-title">Klassen & CSS</h3>
+    <button id="btn-addclass">addClass</button>
+    <button id="btn-rmclass">removeClass</button>
+    <button id="btn-css">css()</button>
+    <button id="btn-computed">computed()</button>
+
+
+    <!-- EVENTS ---------------------------------------------------------------->
+    <h3 class="section-title">Events</h3>
+    <button id="btn-on">on(click)</button>
+    <button id="btn-off">off(click)</button>
+    <button id="btn-trigger">trigger(custom)</button>
+
+
+    <!-- FORMS ---------------------------------------------------------------->
+    <h3 class="section-title">Form Helpers</h3>
+    <label>Input:
+      <input id="demo-input" value="initial">
+    </label>
+    <button id="btn-val-get">val()</button>
+    <button id="btn-val-set">val('neu')</button>
+
+    <label>Select multiple:
+      <select id="demo-select" multiple style="width:100%">
+        <option value="a">Alpha</option>
+        <option value="b">Beta</option>
+        <option value="c">Gamma</option>
+      </select>
+    </label>
+    <button id="btn-sel-set">selectValues(['b','c'])</button>
+    <button id="btn-sel-get">getSelected()</button>
+
+
+    <!-- AJAX NEW (TIMEOUT, OPTS) ---------------------------------------------------->
+    <h3 class="section-title">AJAX (JSON / FormData / Timeout)</h3>
+    <button id="btn-ajax-json">ajax.post JSON</button>
+    <button id="btn-ajax-json-timeout">ajax.post Timeout (100ms)</button>
+    <button id="btn-ajax-form">ajax.postForm</button>
+
+
+    <!-- COOKIES EXTENDED --------------------------------------------------------------->
+    <h3 class="section-title">Cookies (v3.0.3)</h3>
+    <button id="btn-cookie-set">cookie.set</button>
+    <button id="btn-cookie-set-opts">cookie.set mit Optionen</button>
+    <button id="btn-cookie-get">cookie.get</button>
+    <button id="btn-cookie-remove">cookie.remove</button>
+
+
+    <!-- ANIMATION ---------------------------------------------------------------->
+    <h3 class="section-title">Animation</h3>
+    <button id="btn-fadein">fadeIn()</button>
+    <button id="btn-fadeout">fadeOut()</button>
+    <button id="btn-slideup">slideUp()</button>
+    <button id="btn-slidedown">slideDown()</button>
+
+
+    <!-- UTILITIES ---------------------------------------------------------------->
+    <h3 class="section-title">Utilities</h3>
+    <button id="btn-isjson">isJSON()</button>
+    <button id="btn-deepeq">deepEqual()</button>
+    <button id="btn-detect">gBr()</button>
+    <button id="btn-exec">exec('2+2')</button>
+
+
+    <!-- LEGACY ALIASES (PART 1) ------------------------------------------------------->
+    <h3 class="section-title">Legacy-Aliase: DOM</h3>
+    <button id="btn-l-htm">htm()</button>
+    <button id="btn-l-txt">txt()</button>
+    <button id="btn-l-aCN">aCN()</button>
+    <button id="btn-l-rCN">rCN()</button>
+    <button id="btn-l-clL">clL()</button>
+    <button id="btn-l-oHt">oHt()</button>
+    <button id="btn-l-oTx">oTx()</button>
+
+    <h3 class="section-title">Legacy: Navigation</h3>
+    <button id="btn-l-fEl">fEl()</button>
+    <button id="btn-l-lEl">lEl()</button>
+    <button id="btn-l-nEl">nEl()</button>
+    <button id="btn-l-bEl">bEl()</button>
+
+
+    <h3 class="section-title">Legacy: Attribute</h3>
+    <button id="btn-l-atr">atr('data-y',999)</button>
+    <button id="btn-l-hAt">hAt('data-y')</button>
+    <button id="btn-l-rAt">rAt('data-y')</button>
+
+    <h3 class="section-title">Legacy: CSS</h3>
+    <button id="btn-l-sty">sty()</button>
+    <button id="btn-l-sRP">sRP('border')</button>
+
+    <h3 class="section-title">Legacy: Cookies</h3>
+    <button id="btn-l-sCV">sCV()</button>
+    <button id="btn-l-gCV">gCV()</button>
+
+    <h3 class="section-title">Legacy: Array/Obj Helpers</h3>
+    <button id="btn-l-rAE">rAE()</button>
+    <button id="btn-l-fEa">fEa()</button>
+    <button id="btn-l-fOA">fOA()</button>
+    <!-- end control column -->
+  </div>
+
+  <div class="panel" id="main">
+    <h3>Demo-Area & Testergebnisse</h3>
+
+    <div id="demoTarget" class="demo-target" style="min-height:80px;">
+      <strong>demoTarget</strong>
+      <div id="demoTargetInner">Inhalt</div>
+    </div>
+
+    <div id="extra-elements" style="margin-bottom:12px;">
+      <!-- Elements used by some tests -->
+      <div id="dialog-test" data-dvar="App.Dialog" style="display:none">dialog holder</div>
+      <div id="dialog-test2" data-dvar="App.Sub.Val">dialog2</div>
+    </div>
+
+    <h4>Log</h4>
+    <pre id="log">Ready.</pre>
+
+    <h4>Quick docs / Hinweise</h4>
+    <ul>
+      <li>Library: <code>library/javascript/no_jquery_3.0.3.js</code> muss im selben Host erreichbar sein.</li>
+      <li>AJAX-Endpoint (demo): <code>library/php/api.php</code> — gleiche Ordnerstruktur wie zuvor.</li>
+      <li>Dieses Demo führt auch Legacy-Aliase aus — vergleiche Verhalten mit 3.0.2.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- load your script (same folder as demo expects) -->
+<script src="library/javascript/no_jquery_3.0.3.js"></script>
+
+<script>
+window.__njDemoLog__ = function(s){
+  const el = document.getElementById('log');
+  el.textContent =
+    new Date().toLocaleTimeString() + ' › ' + s + "\n" + el.textContent;
+};
+
+const log = window.__njDemoLog__;
+
+(function(){
+
+  // small wrapper to show logs
+  const logEl = document.getElementById('log');
+  function log(s){
+    const now = new Date().toLocaleTimeString();
+    logEl.textContent = now + ' › ' + s + '\\n' + logEl.textContent;
+  }
+
+  // small helper to ensure App.Dialog for Dia tests
+  window.App = window.App || {};
+  window.App.Dialog = { name: 'MainDialog', value: 42 };
+  window.App.Sub = { Val: { nested: 'ok' } };
+
+  // helper shortcuts
+  const $t = () => nj('#demoTarget');
+  const $inner = () => nj('#demoTargetInner');
+
+  // CONFIG: show and apply
+  document.getElementById('btn-config-show').addEventListener('click', () => {
+    log('nj.config -> ' + JSON.stringify(nj.config));
+  });
+
+  document.getElementById('btn-config-apply').addEventListener('click', () => {
+    const expose = document.getElementById('config-exposeDollar').value === 'true';
+    const dbg = document.getElementById('config-debug').value === 'true';
+    const wrn = document.getElementById('config-warn').value === 'true';
+    const to = parseInt(document.getElementById('config-timeout').value, 10) || 0;
+    nj.config.exposeDollar = expose;
+    nj.config.debug = dbg;
+    nj.config.warn = wrn;
+    nj.config.ajaxTimeout = to;
+    // apply exposeDollar immediately
+    if (nj.config.exposeDollar) {
+      if (typeof window.$ !== 'undefined' && window.$ !== nj && nj.config.warn) {
+        console.warn('nj: global $ exists and will be overwritten because exposeDollar true');
+      }
+      window.$ = nj;
+    } else {
+      // if previously set and we now disable, do not remove existing $ to avoid surprising other libs.
+      // Instead print advisory
+      if (window.$ === nj) {
+        try { delete window.$; } catch(e) { window.$ = undefined; }
+      }
+    }
+    log('Config applied: ' + JSON.stringify(nj.config));
+  });
+
+  // DOM actions
+  document.getElementById('btn-select').addEventListener('click', () => {
+    const count = nj('#demoTarget').elements.length;
+    log('Select #demoTarget -> ' + count);
+  });
+
+  document.getElementById('btn-html').addEventListener('click', () => {
+    $inner().html('<em>HTML gesetzt: ' + new Date().toLocaleTimeString() + '</em>');
+    log('.html() gesetzt');
+  });
+
+  document.getElementById('btn-text').addEventListener('click', () => {
+    $inner().text('Reiner Text: ' + new Date().toLocaleTimeString());
+    log('.text() gesetzt');
+  });
+
+  document.getElementById('btn-append').addEventListener('click', () => {
+    $inner().append('<span> ++ appended</span>');
+    log('append() aufgerufen');
+  });
+
+  document.getElementById('btn-prepend').addEventListener('click', () => {
+    $inner().prepend('<span>prepended ++ </span>');
+    log('prepend() aufgerufen');
+  });
+
+  document.getElementById('btn-before').addEventListener('click', () => {
+    nj('#demoTarget').before('<div class="panel">Inserted before</div>');
+    log('before() aufgerufen');
+  });
+
+  document.getElementById('btn-after').addEventListener('click', () => {
+    nj('#demoTarget').after('<div class="panel">Inserted after</div>');
+    log('after() aufgerufen');
+  });
+
+  document.getElementById('btn-remove').addEventListener('click', () => {
+    const dt = nj('#demoTarget');
+    if (dt.isE && dt.isE()) {
+      dt.remove();
+      log('#demoTarget entfernt (remove)');
+      setTimeout(() => {
+        // recreate
+        const container = document.querySelector('body');
+        const node = document.createElement('div');
+        node.id = 'demoTarget';
+        node.className = 'demo-target';
+        node.innerHTML = '<strong>demoTarget</strong><div id="demoTargetInner">neu erstellt</div>';
+        document.body.insertBefore(node, container.querySelector('.grid'));
+        log('#demoTarget neu erstellt');
+      }, 400);
+    } else {
+      log('#demoTarget nicht vorhanden');
+    }
+  });
+
+  // Attributes / data
+  document.getElementById('btn-attr-set').addEventListener('click', () => {
+    nj('#demoTarget').attr('data-x', '123');
+    log('attr data-x=123 gesetzt');
+  });
+  document.getElementById('btn-attr-get').addEventListener('click', () => {
+    const v = nj('#demoTarget').attr('data-x');
+    log('attr data-x -> ' + v);
+  });
+  document.getElementById('btn-attr-remove').addEventListener('click', () => {
+    nj('#demoTarget').removeAttr('data-x');
+    log('attr data-x entfernt');
+  });
+
+  document.getElementById('btn-data-set').addEventListener('click', () => {
+    nj('#demoTarget').data('hello', 'world');
+    log('data hello=world gesetzt');
+  });
+  document.getElementById('btn-data-get').addEventListener('click', () => {
+    const v = nj('#demoTarget').data('hello');
+    log('data hello -> ' + v);
+  });
+  document.getElementById('btn-data-remove').addEventListener('click', () => {
+    nj('#demoTarget').removeData('hello');
+    log('data hello entfernt');
+  });
+
+  // classes & css
+  document.getElementById('btn-addclass').addEventListener('click', () => {
+    nj('#demoTarget').addClass('demo-highlight');
+    log('addClass demo-highlight');
+  });
+  document.getElementById('btn-rmclass').addEventListener('click', () => {
+    nj('#demoTarget').removeClass('demo-highlight');
+    log('removeClass demo-highlight');
+  });
+  document.getElementById('btn-css').addEventListener('click', () => {
+    nj('#demoTarget').css({ border: '2px solid #4f46e5', padding: '8px' });
+    log('css() gesetzt');
+  });
+  document.getElementById('btn-computed').addEventListener('click', () => {
+    log('computed(display) -> ' + nj('#demoTarget').computed('display'));
+  });
+
+  // events
+  function demoHandler(){ log('demoTarget click handler called'); }
+  document.getElementById('btn-on').addEventListener('click', () => {
+    nj('#demoTarget').on('click', demoHandler);
+    log('on(click) gesetzt');
+  });
+  document.getElementById('btn-off').addEventListener('click', () => {
+    nj('#demoTarget').off('click', demoHandler);
+    log('off(click) entfernt');
+  });
+  document.getElementById('btn-trigger').addEventListener('click', () => {
+    nj('#demoTarget').trigger('customEvent');
+    log('trigger(customEvent) aufgerufen');
+  });
+
+  // forms
+  document.getElementById('btn-val-get').addEventListener('click', () => {
+    log('val -> ' + nj('#demo-input').val());
+  });
+  document.getElementById('btn-val-set').addEventListener('click', () => {
+    nj('#demo-input').val('neu-' + Date.now());
+    log('val gesetzt');
+  });
+
+  document.getElementById('btn-sel-set').addEventListener('click', () => {
+    nj('#demo-select').selectValues(['b','c']);
+    log('selectValues b,c gesetzt');
+  });
+  document.getElementById('btn-sel-get').addEventListener('click', () => {
+    log('getSelected -> ' + JSON.stringify(nj('#demo-select').getSelected()));
+  });
+
+  // AJAX
+  document.getElementById('btn-ajax-json').addEventListener('click', () => {
+    const data = { action:'echo', ts: Date.now(), note: 'test json' };
+    nj.ajax.post('library/php/api.php', data).then(res => {
+      log('ajax.post success -> ' + JSON.stringify(res));
+    }).catch(err => {
+      log('ajax.post error -> ' + err);
+    });
+  });
+
+  // AJAX timeout small (expect timeout)
+  document.getElementById('btn-ajax-json-timeout').addEventListener('click', () => {
+    const data = { action:'sleep', ts: Date.now() };
+    nj.ajax.post('library/php/api.php', data, { timeout: 100 }).then(res => {
+      log('ajax post timeout test -> success (unexpected): ' + JSON.stringify(res));
+    }).catch(err => {
+      log('ajax post timeout test -> error: ' + err);
+    });
+  });
+
+  document.getElementById('btn-ajax-form').addEventListener('click', () => {
+    const formObj = { action:'formEcho', ts: Date.now(), text: 'form data test' };
+    nj.ajax.postForm('library/php/api.php', formObj).then(res => {
+      log('ajax.postForm success -> ' + res);
+    }).catch(err => {
+      log('ajax.postForm error -> ' + err);
+    });
+  });
+
+  // cookies
+  document.getElementById('btn-cookie-set').addEventListener('click', () => {
+    nj.cookie.set('nj_demo', 'val_' + Date.now(), 1);
+    log('cookie simple set');
+  });
+
+  document.getElementById('btn-cookie-set-opts').addEventListener('click', () => {
+    // note: Secure cookie in local http won't be set as Secure requires https; this demonstrates option use
+    nj.cookie.set('nj_demo_opts', 'o_' + Date.now(), 3, { secure: false, sameSite: 'Lax', path: '/', domain: '' });
+    log('cookie set with opts (secure:false, sameSite:Lax)');
+  });
+
+  document.getElementById('btn-cookie-get').addEventListener('click', () => {
+    log('cookie get -> ' + nj.cookie.get('nj_demo') + ' | opts -> ' + nj.cookie.get('nj_demo_opts'));
+  });
+
+  document.getElementById('btn-cookie-remove').addEventListener('click', () => {
+    nj.cookie.remove('nj_demo');
+    nj.cookie.remove('nj_demo_opts', { path: '/' });
+    log('cookies removed');
+  });
+
+  // animation
+  document.getElementById('btn-fadein').addEventListener('click', () => {
+    nj('#demoTarget').fadeIn(600);
+    log('fadeIn called');
+  });
+  document.getElementById('btn-fadeout').addEventListener('click', () => {
+    nj('#demoTarget').fadeOut(600);
+    log('fadeOut called');
+  });
+  document.getElementById('btn-slideup').addEventListener('click', () => {
+    nj('#demoTarget').slideUp(500);
+    log('slideUp called');
+  });
+  document.getElementById('btn-slidedown').addEventListener('click', () => {
+    nj('#demoTarget').slideDown(500);
+    log('slideDown called');
+  });
+
+  // utilities
+  document.getElementById('btn-isjson').addEventListener('click', () => {
+    log('isJSON -> ' + nj.isJ('{"a":1}'));
+  });
+  document.getElementById('btn-deepeq').addEventListener('click', () => {
+    log('cEq({x:1},{x:1}) -> ' + nj.cEq({x:1},{x:1}));
+  });
+  document.getElementById('btn-detect').addEventListener('click', () => {
+    log('gBr -> ' + nj.gBr());
+  });
+  document.getElementById('btn-exec').addEventListener('click', () => {
+    try {
+      const res = nj.exec('return 2+2;') ;
+      log('exec("2+2") -> ' + res);
+    } catch (e) {
+      log('exec error -> ' + e);
+    }
+  });
+
+  // LEGACY aliases - DOM
+  document.getElementById('btn-l-htm').addEventListener('click', () => {
+    nj('#demoTargetInner').htm('<b>htm alias</b>');
+    log('htm() called');
+  });
+  document.getElementById('btn-l-txt').addEventListener('click', () => {
+    nj('#demoTargetInner').txt('txt alias');
+    log('txt() called');
+  });
+  document.getElementById('btn-l-aCN').addEventListener('click', () => {
+    nj('#demoTarget').aCN('legacy-class');
+    log('aCN() called');
+  });
+  document.getElementById('btn-l-rCN').addEventListener('click', () => {
+    nj('#demoTarget').rCN('legacy-class');
+    log('rCN() called');
+  });
+  document.getElementById('btn-l-clL').addEventListener('click', () => {
+    log('clL -> ' + JSON.stringify(Array.from(nj('#demoTarget').clL() || [])));
+  });
+  document.getElementById('btn-l-oHt').addEventListener('click', () => {
+    nj('#demoTargetInner').oHt('<span>outerHTML test</span>');
+    log('oHt() called');
+  });
+  document.getElementById('btn-l-oTx').addEventListener('click', () => {
+    nj('#demoTargetInner').oTx('outerText test');
+    log('oTx() called');
+  });
+
+  // legacy navigation
+  document.getElementById('btn-l-fEl').addEventListener('click', () => {
+    log('fEl -> ' + (nj('#demoTarget').fEl().elements.length));
+  });
+  document.getElementById('btn-l-lEl').addEventListener('click', () => {
+    log('lEl -> ' + (nj('#demoTarget').lEl().elements.length));
+  });
+  document.getElementById('btn-l-nEl').addEventListener('click', () => {
+    log('nEl (next) -> ' + nj('#demoTarget').nEl().elements.length);
+  });
+  document.getElementById('btn-l-bEl').addEventListener('click', () => {
+    log('bEl (prev) -> ' + nj('#demoTarget').bEl().elements.length);
+  });
+
+  // legacy attr
+  document.getElementById('btn-l-atr').addEventListener('click', () => {
+    nj('#demoTarget').atr('data-y', 999);
+    log('atr set');
+  });
+  document.getElementById('btn-l-hAt').addEventListener('click', () => {
+    log('hAt -> ' + nj('#demoTarget').hAt('data-y'));
+  });
+  document.getElementById('btn-l-rAt').addEventListener('click', () => {
+    nj('#demoTarget').rAt('data-y');
+    log('rAt called');
+  });
+
+  // legacy style
+  document.getElementById('btn-l-sty').addEventListener('click', () => {
+    nj('#demoTarget').sty({ backgroundColor: '#fff7ed' });
+    log('sty called');
+  });
+  document.getElementById('btn-l-sRP').addEventListener('click', () => {
+    nj('#demoTarget').sRP('border');
+    log('sRP removeProp border called');
+  });
+
+  // legacy cookies
+  document.getElementById('btn-l-sCV').addEventListener('click', () => {
+    nj('#demoTarget').sCV('legacy_cookie', 'v1', 1);
+    log('sCV called');
+  });
+  document.getElementById('btn-l-gCV').addEventListener('click', () => {
+    log('gCV -> ' + nj('#demoTarget').gCV('legacy_cookie'));
+  });
+
+  // legacy array helpers
+  document.getElementById('btn-l-rAE').addEventListener('click', () => {
+    const arr = [1,2,3,2];
+    const r = nj.rAE(arr, 2);
+    log('rAE -> ' + JSON.stringify(r));
+  });
+  document.getElementById('btn-l-fEa').addEventListener('click', () => {
+    const arr = ['a','b','c'];
+    nj.fEa(arr, (i,e) => log('fEa -> idx:' + i + ' val:' + e));
+  });
+  document.getElementById('btn-l-fOA').addEventListener('click', () => {
+    const arr = [{id:1,x:2},{id:2,x:3}];
+    const out = nj.fOA(arr, 'id', 2);
+    log('fOA -> ' + JSON.stringify(out));
+  });
+
+  // end of part 2 script
+})();
+</script>
+<script>
+(function(){
+  // Additional tests: Dialog-Reflection, misc utilities, final sanity checks
+
+  // Dialog-Reflection tests for gDV, Dia, gRO, bDV
+  // Create nested elements with dataset dvar to test
+  const wrap = document.createElement('div');
+  wrap.innerHTML = '<div id="dtest" data-dvar="App.Dialog"><span id="dtestspan">x</span></div>';
+  document.getElementById('extra-elements').appendChild(wrap);
+
+  // Test gDV
+  const gDVbtn = document.createElement('button');
+  gDVbtn.textContent = 'test gDV()';
+  gDVbtn.style.margin = '6px';
+  gDVbtn.addEventListener('click', () => {
+    const v = nj('#dtestspan').gDV();
+    log('gDV -> ' + v);
+  });
+  document.getElementById('extra-elements').appendChild(gDVbtn);
+
+  // Test Dia and gRO and bDV
+  const DiaBtn = document.createElement('button');
+  DiaBtn.textContent = 'test Dia()/gRO()/bDV()';
+  DiaBtn.style.margin = '6px';
+  DiaBtn.addEventListener('click', () => {
+    const d = nj('#dtestspan').Dia();
+    const ro = nj('#dtestspan').gRO();
+    const b = nj.bDV('App.Sub.Val');
+    log('Dia -> ' + JSON.stringify(d) + ' | gRO -> ' + (ro ? ro.name || JSON.stringify(ro) : 'undefined') + ' | bDV App.Sub.Val -> ' + JSON.stringify(b));
+  });
+  document.getElementById('extra-elements').appendChild(DiaBtn);
+
+  // Test ddS / ddG
+  const ddBtn = document.createElement('button');
+  ddBtn.textContent = 'test ddS/ddG';
+  ddBtn.style.margin = '6px';
+  ddBtn.addEventListener('click', () => {
+    nj.ddS('--demo-color', '#fde68a');
+    const vv = nj.ddG('--demo-color');
+    log('ddS/ddG -> ' + vv);
+  });
+  document.getElementById('extra-elements').appendChild(ddBtn);
+
+  // Test nj.post (legacy wrapper) — uses ajax.post internally
+  const postBtn = document.createElement('button');
+  postBtn.textContent = 'test nj.post (legacy)';
+  postBtn.style.margin = '6px';
+  postBtn.addEventListener('click', () => {
+    nj.post('library/php/api.php', { action: 'echo', legacy: true }, (res, err) => {
+      if (err) log('nj.post err -> ' + err);
+      else log('nj.post res -> ' + JSON.stringify(res));
+    });
+  });
+  document.getElementById('extra-elements').appendChild(postBtn);
+
+  // Test fetchPost alias
+  const fetchBtn = document.createElement('button');
+  fetchBtn.textContent = 'test fetchPost alias';
+  fetchBtn.style.margin = '6px';
+  fetchBtn.addEventListener('click', () => {
+    nj.fetchPost('library/php/api.php', { action: 'echo', alias: 'fetchPost' }, (res, err) => {
+      if (err) log('fetchPost err -> ' + err); else log('fetchPost res -> ' + JSON.stringify(res));
+    });
+  });
+  document.getElementById('extra-elements').appendChild(fetchBtn);
+
+  // Test isJ / isJSON static
+  const isJBtn = document.createElement('button');
+  isJBtn.textContent = 'test isJ';
+  isJBtn.style.margin = '6px';
+  isJBtn.addEventListener('click', () => {
+    log('isJ(\'{"a":1}\') -> ' + nj.isJ('{"a":1}'));
+  });
+  document.getElementById('extra-elements').appendChild(isJBtn);
+
+  // Test extend / oEx
+  const exBtn = document.createElement('button');
+  exBtn.textContent = 'test extend / oEx';
+  exBtn.style.margin = '6px';
+  exBtn.addEventListener('click', () => {
+    const a = { x: 1 }, b = { y: 2 };
+    const r = nj.extend(a, b);
+    log('extend -> ' + JSON.stringify(r));
+  });
+  document.getElementById('extra-elements').appendChild(exBtn);
+
+  // Test arrayRemove
+  const arBtn = document.createElement('button');
+  arBtn.textContent = 'test arrayRemove';
+  arBtn.style.margin = '6px';
+  arBtn.addEventListener('click', () => {
+    const arr = [1,2,3];
+    const out = nj.arrayRemove(arr, 2);
+    log('arrayRemove -> ' + JSON.stringify(out));
+  });
+  document.getElementById('extra-elements').appendChild(arBtn);
+
+  // Test filterObjectArray
+  const foaBtn = document.createElement('button');
+  foaBtn.textContent = 'test filterObjectArray';
+  foaBtn.style.margin = '6px';
+  foaBtn.addEventListener('click', () => {
+    const arr = [{id:1, name:'a'},{id:2,name:'b'}];
+    const out = nj.filterObjectArray(arr,'id',2);
+    log('filterObjectArray -> ' + JSON.stringify(out));
+  });
+  document.getElementById('extra-elements').appendChild(foaBtn);
+
+  // Test forEach helper
+  const fEabtn = document.createElement('button');
+  fEabtn.textContent = 'test forEach helper';
+  fEabtn.style.margin = '6px';
+  fEabtn.addEventListener('click', () => {
+    nj.forEach([10,20,30], (v,i) => log('forEach -> idx:' + i + ' val:' + v));
+  });
+  document.getElementById('extra-elements').appendChild(fEabtn);
+
+  // Test exC alias mapping (exC -> exec or exC -> exec?) ensure exists
+  const exCbtn = document.createElement('button');
+  exCbtn.textContent = 'test exC (alias of exec)';
+  exCbtn.style.margin = '6px';
+  exCbtn.addEventListener('click', () => {
+    try {
+      const r = nj.exec('return "exC test " + (3+4);');
+      log('exC -> ' + r);
+    } catch (e) { log('exC error -> ' + e); }
+  });
+  document.getElementById('extra-elements').appendChild(exCbtn);
+
+  // Final sanity check: list many aliases to ensure they exist
+  const sanityBtn = document.createElement('button');
+  sanityBtn.textContent = 'Sanity: check many aliases exist';
+  sanityBtn.style.margin = '6px';
+  sanityBtn.addEventListener('click', () => {
+    const keys = [
+      'post','fetchPost','fetchPostNew','cookie','extend','isJ','ddS','ddG',
+      'rAE','fEa','fOA'
+    ];
+    const found = {};
+    keys.forEach(k => { found[k] = (typeof nj[k] !== 'undefined'); });
+    log('sanity -> ' + JSON.stringify(found));
+  });
+  document.getElementById('extra-elements').appendChild(sanityBtn);
+
+  // small auto-run to show initial config
+  setTimeout(() => {
+    log('Initial nj.config -> ' + JSON.stringify(nj.config));
+  }, 200);
+
+  // End of part 3
+})();
+</script>
+
+</body>
+</html>

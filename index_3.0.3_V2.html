@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>no_jquery 3.0.3 — Vollständige Test- und Dokumentationsseite V2</title>
+<style>
+  :root{--ok:#0a0;--bad:#c00;--muted:#666}
+  body{font-family:Inter,Segoe UI,Arial,sans-serif;margin:20px;background:#fff;color:#111}
+  h1{font-size:20px;margin-bottom:6px}
+  h2{margin-top:30px;border-top:1px solid #eee;padding-top:16px}
+  .grid{display:grid;grid-template-columns:1fr 380px;gap:18px}
+  .panel{padding:12px;border:1px solid #e6e6e6;border-radius:8px;background:#fafafa}
+  pre{background:#f6f6f6;padding:8px;border-radius:6px;overflow:auto}
+  code{font-family:Monaco,Consolas,monospace}
+  button{padding:8px 10px;border-radius:6px;border:1px solid #ccc;background:#fff;cursor:pointer}
+  .ok{color:var(--ok);font-weight:700}
+  .bad{color:var(--bad);font-weight:700}
+  .result{margin-top:8px;padding:8px;background:#fff;border-radius:6px;border:1px solid #eee;max-height:260px;overflow:auto}
+  .row{display:flex;gap:8px;align-items:center}
+  .muted{color:var(--muted)}
+  .small{font-size:13px}
+</style>
+<!-- Include the patched library: ensure this path points to your patched no_jquery_3.0.3.js -->
+<script src="no_jquery_3.0.3.js"></script>
+</head>
+<body>
+<h1>no_jquery 3.0.3 — Vollständige Test- und Dokumentationsseite</h1>
+<p class="muted">Diese Seite dokumentiert die API (Syntax + Kurzbeschreibung) und bietet interaktive Tests (Buttons) für jede Funktion und Alias. Lade die Seite nach dem Ersetzen der <code>no_jquery_3.0.3.js</code> durch deine gepatchte Version neu.</p>
+<div class="grid">
+  <div class="panel" id="doc-panel">
+    <h2>Inhaltsverzeichnis</h2>
+    <ol>
+      <li><a href="#selection">Selection & Basis</a></li>
+      <li><a href="#dom">DOM-Manipulation</a></li>
+      <li><a href="#attributes">Attribute & Data</a></li>
+      <li><a href="#classes">Klassen</a></li>
+      <li><a href="#styles">Styles</a></li>
+      <li><a href="#events">Events</a></li>
+      <li><a href="#forms">Form Helpers</a></li>
+      <li><a href="#anim">Animationen</a></li>
+      <li><a href="#geometry">Geometry</a></li>
+      <li><a href="#ajax">Ajax</a></li>
+      <li><a href="#cookies">Cookies</a></li>
+      <li><a href="#misc">Misc / Utilities</a></li>
+      <li><a href="#compat">Legacy Aliases / Kompatibilität</a></li>
+      <li><a href="#runall">Run All Tests</a></li>
+    </ol>
+  </div>
+
+  <div class="panel" id="control-panel">
+    <h2>Schnellaktionen</h2>
+    <div class="row"><button onclick="runAllTests()">Alle Tests ausführen</button><span class="muted small">(sequenziell)</span></div>
+    <div style="height:12px"></div>
+    <div class="row"><button onclick="clearResults()">Ergebnisse leeren</button></div>
+    <div class="result" id="global-log">Bereit — klicke einen Test.</div>
+  </div>
+</div>
+
+<!-- Test fixture area (DOM elements used by tests) -->
+<div style="margin-top:26px;" id="fixtures">
+  <h2 id="selection">Selection & Basis</h2>
+  <p class="small muted">Syntax: <code>nj(selector)</code>, <code>nj(element)</code>, <code>nj()</code></p>
+  <div class="panel">
+    <div class="row"><strong>Fixture</strong></div>
+    <div style="margin-top:10px">
+      <div id="fixture-root">
+        <div id="sel-test" class="fbox">Sel-Target</div>
+        <div class="test-list"><span class="item a">a</span><span class="item b">b</span></div>
+      </div>
+    </div>
+    <div style="margin-top:12px" class="row">
+      <button onclick="testSelection()">Test Selection</button>
+      <button onclick="testElsCompatibility()">Test els() / .e / .length</button>
+    </div>
+    <div class="result" id="res-selection"></div>
+  </div>
+
+  <h2 id="dom">DOM-Manipulation</h2>
+  <p class="small muted">Syntax: <code>html/text/val/append/prepend/before/after/remove/parent/children/first/last/eq/next/prev</code></p>
+  <div class="panel">
+    <div class="row"><button onclick="testDOM()">Test DOM-Methoden</button></div>
+    <div class="result" id="res-dom"></div>
+  </div>
+
+  <h2 id="attributes">Attribute & Data</h2>
+  <p class="small muted">Syntax: <code>attr(name[, val])</code>, <code>data(key[, val])</code>, <code>removeAttr(name)</code></p>
+  <div class="panel">
+    <div class="row"><button onclick="testAttributes()">Test Attribute / Data</button></div>
+    <div class="result" id="res-attr"></div>
+  </div>
+
+  <h2 id="classes">Klassen</h2>
+  <p class="small muted">Syntax: <code>addClass(cls)</code>, <code>removeClass(cls)</code>, <code>toggleClass(cls)</code>, <code>hasClass(cls)</code></p>
+  <div class="panel">
+    <div class="row"><button onclick="testClasses()">Test Class-Helpers</button></div>
+    <div class="result" id="res-classes"></div>
+  </div>
+
+  <h2 id="styles">Styles</h2>
+  <p class="small muted">Syntax: <code>css(prop, val)</code> or <code>css({prop: val})</code>, <code>removeCss(prop)</code>, <code>computed(prop)</code></p>
+  <div class="panel">
+    <div class="row"><button onclick="testStyles()">Test Styles</button></div>
+    <div class="result" id="res-styles"></div>
+  </div>
+
+  <h2 id="events">Events</h2>
+  <p class="small muted">Syntax: <code>on(event, handler[, opts])</code>, <code>off(event, handler)</code>, <code>trigger(name)</code></p>
+  <div class="panel">
+    <div class="row"><button onclick="testEvents()">Test Events</button></div>
+    <div class="result" id="res-events"></div>
+  </div>
+
+  <h2 id="forms">Form Helpers</h2>
+  <p class="small muted">Syntax: <code>checked([state])</code>, <code>selectValues(values)</code>, <code>getSelected()</code></p>
+  <div class="panel">
+    <div class="row" style="align-items:flex-start">
+      <div style="flex:1">
+        <label><input id="cb-test" type="checkbox"> Checkbox</label><br>
+        <select id="sel-test-select" multiple style="min-width:220px">
+          <option value="x">x</option>
+          <option value="y">y</option>
+          <option value="z">z</option>
+        </select>
+      </div>
+      <div style="min-width:180px">
+        <button onclick="testForms()">Test Form-Helpers</button>
+      </div>
+    </div>
+    <div class="result" id="res-forms"></div>
+  </div>
+
+  <h2 id="anim">Animationen</h2>
+  <p class="small muted">Syntax: <code>fadeIn(duration)</code>, <code>fadeOut(duration)</code>, <code>slideUp(duration)</code>, <code>slideDown(duration)</code></p>
+  <div class="panel">
+    <div class="row">
+      <div style="flex:1"><div id="anim-box" style="width:100%;height:60px;background:#ddd;display:block;padding:10px">Anim Box</div></div>
+      <div style="min-width:180px">
+        <button onclick="testAnimations()">Test Animationen</button>
+      </div>
+    </div>
+    <div class="result" id="res-anim"></div>
+  </div>
+
+  <h2 id="geometry">Geometry / Bounding</h2>
+  <p class="small muted">Syntax: <code>getRect()</code>, <code>getBounding()</code></p>
+  <div class="panel">
+    <div class="row"><button onclick="testGeometry()">Test Geometry</button></div>
+    <div class="result" id="res-geometry"></div>
+  </div>
+
+  <h2 id="ajax">Ajax (mocked)</h2>
+  <p class="small muted">Syntax: <code>nj.ajax.post(url, data, opts)</code>, <code>nj.ajax.postForm(url, obj, opts)</code>, <code>nj.post(url, data, cb)</code></p>
+  <div class="panel">
+    <div class="row"><button onclick="testAjax()">Test Ajax (mock)</button></div>
+    <div class="result" id="res-ajax"></div>
+  </div>
+
+  <h2 id="cookies">Cookies</h2>
+  <p class="small muted">Syntax: <code>nj.cookie.get(name)</code>, <code>nj.cookie.set(name,value,days,opts)</code>, <code>nj.cookie.remove(name,opts)</code></p>
+  <div class="panel">
+    <div class="row"><button onclick="testCookies()">Test Cookies</button></div>
+    <div class="result" id="res-cookies"></div>
+  </div>
+
+  <h2 id="misc">Misc / Utilities</h2>
+  <p class="small muted">Wichtige Hilfsfunktionen: <code>nj.extend</code>, <code>nj.isJSON</code>, <code>nj.exec</code>, <code>nj.detectBrowser</code></p>
+  <div class="panel">
+    <div class="row"><button onclick="testMisc()">Test Utilities</button></div>
+    <div class="result" id="res-misc"></div>
+  </div>
+
+  <h2 id="compat">Legacy Aliases / Kompatibilität</h2>
+  <p class="small muted">Viele Aliase werden unterstützt: <code>lEl/fEl/nEl/bEl/cEl</code>, <code>m/app/pCh/aCh</code>, <code>id/tag/ds/sDs</code> u.v.m.</p>
+  <div class="panel">
+    <div class="row"><button onclick="testAliases()">Test Aliases</button></div>
+    <div class="result" id="res-aliases"></div>
+  </div>
+
+  <h2 id="runall">Run All Tests</h2>
+  <div class="panel">
+    <div class="row"><button onclick="runAllTests()">Alle Tests (sequenziell)</button></div>
+    <div class="result" id="res-all"></div>
+  </div>
+</div>
+
+<script>
+function appendLog(elId, html){ const el=document.getElementById(elId); el.innerHTML += html + '<br>'; document.getElementById('global-log').innerHTML = 'Letzter Test: '+elId; }
+function clearResults(){ const ids = ['res-selection','res-dom','res-attr','res-classes','res-styles','res-events','res-forms','res-anim','res-geometry','res-ajax','res-cookies','res-misc','res-aliases','res-all','global-log']; ids.forEach(i=>document.getElementById(i).innerHTML=''); }
+
+// ------------------------- Selection tests -------------------------
+function testSelection(){ try{
+  const a = nj('#sel-test'); appendLog('res-selection','nj("#sel-test").length = '+a.length);
+  appendLog('res-selection','nj(document.body).e.tagName = '+nj(document.body).e.tagName);
+  appendLog('res-selection','nj(".not-found").length = '+nj('.not-found').length);
+  appendLog('res-selection','nj() empty = '+(nj().length===0));
+}catch(e){ appendLog('res-selection','Fehler: '+e); }}
+
+function testElsCompatibility(){ try{
+  const raw1 = nj().els('#sel-test'); appendLog('res-selection','nj().els("#sel-test") -> nodeType='+ (raw1?raw1.nodeType:'null') );
+  const w = nj('#sel-test'); const raw2 = w.els(); appendLog('res-selection','nj("#sel-test").els() -> nodeType='+ (raw2?raw2.nodeType:'null') );
+  appendLog('res-selection','.e exists and tagName='+ (w.e? w.e.tagName : 'null') );
+  appendLog('res-selection','.length='+ w.length );
+}catch(e){ appendLog('res-selection','Fehler: '+e); }}
+
+// ------------------------- DOM tests -------------------------
+function testDOM(){ try{
+  const target = nj('#sel-test');
+  appendLog('res-dom','orig html='+ target.html());
+  target.html('<b>Updated</b>'); appendLog('res-dom','after html set -> '+ target.html());
+  target.text('Plain'); appendLog('res-dom','after text set -> '+ target.text());
+  target.append('<span id="app">APP</span>'); appendLog('res-dom','append -> contains #app? '+(nj('#app').length>0));
+  target.prepend('<i id="pre">PRE</i>'); appendLog('res-dom','prepend -> contains #pre? '+(nj('#pre').length>0));
+  nj('#pre').remove(); nj('#app').remove(); appendLog('res-dom','cleanup append/prepend');
+  const parent = target.parent(); appendLog('res-dom','parent tag='+ parent.elements[0].tagName);
+  appendLog('res-dom','children count='+ target.children().length);
+  appendLog('res-dom','first/last tags='+ target.first().elements[0]?.tagName + '/' + target.last().elements[0]?.tagName );
+}catch(e){ appendLog('res-dom','Fehler: '+ e); }}
+
+// ------------------------- Attribute & Data -------------------------
+function testAttributes(){ try{
+  const t = nj('#sel-test'); t.attr('data-test','x'); appendLog('res-attr','attr set -> '+ t.attr('data-test'));
+  t.data('foo','bar'); appendLog('res-attr','data set -> '+ t.data('foo'));
+  t.removeAttr('data-test'); appendLog('res-attr','removeAttr ok -> '+ t.hasAttr('data-test'));
+}catch(e){ appendLog('res-attr','Fehler: '+e); }}
+
+// ------------------------- Classes -------------------------
+function testClasses(){ try{
+  const t = nj('#sel-test'); t.addClass('alpha beta'); appendLog('res-classes','after addClass -> has alpha? '+ t.hasClass('alpha'));
+  t.removeClass('beta'); appendLog('res-classes','after removeClass beta -> has beta? '+ t.hasClass('beta'));
+  t.toggleClass('tog'); appendLog('res-classes','after toggle tog -> has tog? '+ t.hasClass('tog'));
+}catch(e){ appendLog('res-classes','Fehler: '+e); }}
+
+// ------------------------- Styles -------------------------
+function testStyles(){ try{
+  const t = nj('#sel-test'); t.css('backgroundColor','rgb(255,240,230)'); appendLog('res-styles','css get -> '+ t.css('backgroundColor'));
+  t.css({border:'1px solid red',padding:'6px'}); appendLog('res-styles','css object applied, computed padding='+ t.computed('padding'));
+  t.removeCss('padding'); appendLog('res-styles','removed padding, computed='+ t.computed('padding'));
+}catch(e){ appendLog('res-styles','Fehler: '+e); }}
+
+// ------------------------- Events -------------------------
+function testEvents(){ try{
+  const t = nj('#sel-test');
+  function handler(){ appendLog('res-events','event handler fired'); }
+  t.on('click', handler);
+  // simulate
+  t.trigger('click');
+  t.off('click', handler);
+  t.trigger('click'); appendLog('res-events','after off -> no additional handler lines expected');
+}catch(e){ appendLog('res-events','Fehler: '+e); }}
+
+// ------------------------- Form Helpers -------------------------
+function testForms(){ try{
+  const cb = nj('#cb-test'); cb.checked(true); appendLog('res-forms','checkbox checked? '+ cb.checked());
+  const sel = nj('#sel-test-select'); sel.selectValues(['y','z']); appendLog('res-forms','select values -> '+ sel.getSelected().join(','));
+}catch(e){ appendLog('res-forms','Fehler: '+e); }}
+
+// ------------------------- Animations -------------------------
+function testAnimations(){ try{
+  const el = nj('#anim-box');
+  el.fadeOut(250);
+  setTimeout(()=>{
+    appendLog('res-anim','fadeOut done, display='+ el.elements[0].style.display);
+    el.fadeIn(250);
+    setTimeout(()=> appendLog('res-anim','fadeIn done, display='+ el.elements[0].style.display),300);
+  },300);
+  // slideUp / slideDown
+  setTimeout(()=>{ el.slideUp(200); setTimeout(()=>{ appendLog('res-anim','slideUp done'); el.slideDown(200); setTimeout(()=> appendLog('res-anim','slideDown done'),250); },250); },800);
+}catch(e){ appendLog('res-anim','Fehler: '+e); }}
+
+// ------------------------- Geometry -------------------------
+function testGeometry(){ try{
+  const r = nj('#sel-test').getRect(); appendLog('res-geometry','rect w/h = '+ (r? r.width + '/' + r.height : 'null'));
+}catch(e){ appendLog('res-geometry','Fehler: '+e); }}
+
+// ------------------------- AJAX (mocked) -------------------------
+function testAjax(){ (async ()=>{
+  const out='res-ajax'; try{
+    // mock fetch
+    const realFetch = window.fetch;
+    window.fetch = function(url, opts){
+      return Promise.resolve({ ok: true, status:200, headers:{ get: ()=> 'application/json' }, json: ()=> Promise.resolve({mock:true, url:url, body: opts && opts.body? JSON.parse(opts.body): null }), text: ()=> Promise.resolve('') });
+    };
+    const resp = await nj.ajax.post('/mock', {a:1}); appendLog(out,'nj.ajax.post -> '+ JSON.stringify(resp));
+    const frm = await nj.ajax.postForm('/mockform', {x:1}); appendLog(out,'nj.ajax.postForm -> '+ (typeof frm));
+    // test legacy wrapper
+    nj.post('/mockcb', {b:2}, function(res, err){ appendLog(out,'nj.post cb -> res='+ JSON.stringify(res)+', err='+ (err?err:'null')); });
+    // restore
+    window.fetch = realFetch;
+  }catch(e){ appendLog(out,'Fehler: '+ e); }
+})(); }
+
+// ------------------------- Cookies -------------------------
+function testCookies(){ try{
+  nj.cookie.set('testc','ok',1,{path:'/'}); appendLog('res-cookies','set -> '+ nj.cookie.get('testc'));
+  nj.cookie.remove('testc'); appendLog('res-cookies','after remove -> '+ nj.cookie.get('testc'));
+}catch(e){ appendLog('res-cookies','Fehler: '+e); }}
+
+// ------------------------- Misc / Utilities -------------------------
+function testMisc(){ try{
+  appendLog('res-misc','detectBrowser -> '+ nj.detectBrowser());
+  appendLog('res-misc','isJSON valid string -> '+ nj.isJSON('{"a":1}'));
+  appendLog('res-misc','cEq deepEqual -> '+ nj.cEq({a:1},{a:1}));
+  appendLog('res-misc','exec -> '+ (typeof nj.exec('return 2+2')) );
+}catch(e){ appendLog('res-misc','Fehler: '+e); }}
+
+// ------------------------- Aliases -------------------------
+function testAliases(){ try{
+  const t = nj('#sel-test');
+  appendLog('res-aliases','lEl == first -> '+ (t.lEl().elements[0] === t.first().elements[0]));
+  appendLog('res-aliases','fEl tag -> '+ t.fEl().elements[0].tagName);
+  appendLog('res-aliases','nEl(1) eq(0) -> '+ (t.nEl(1).elements[0] === t.eq(0).elements[0]));
+  // m() move test: create container
+  const c = nj().cEl('div'); c.id = 'mcontainer'; document.body.appendChild(c);
+  const item = nj().cEl('span'); item.id = 'moveitem'; item.textContent = 'move'; c.appendChild(item);
+  appendLog('res-aliases','cEl created -> '+ (nj('#mcontainer').length>0));
+  // test legacy names of ajax wrappers exist
+  appendLog('res-aliases','nj.post exists -> '+ (typeof nj.post === 'function'));
+}catch(e){ appendLog('res-aliases','Fehler: '+e); }}
+
+// ------------------------- Run all tests sequentially -------------------------
+async function runAllTests(){ clearResults(); appendLog('res-all','Starte alle Tests...');
+  testSelection(); await wait(100);
+  testElsCompatibility(); await wait(100);
+  testDOM(); await wait(50);
+  testAttributes(); await wait(50);
+  testClasses(); await wait(50);
+  testStyles(); await wait(50);
+  testEvents(); await wait(50);
+  testForms(); await wait(50);
+  testAnimations(); await wait(1500);
+  testGeometry(); await wait(50);
+  testAjax(); await wait(200);
+  testCookies(); await wait(50);
+  testMisc(); await wait(50);
+  testAliases(); await wait(100);
+  appendLog('res-all','Alle Tests beendet.');
+}
+function wait(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+// Auto-run a minimal smoke test on load
+window.addEventListener('load', ()=>{
+  document.getElementById('global-log').innerHTML = 'Library loaded: ' + (typeof nj === 'function' ? 'ok' : 'MISSING');
+});
+
+</script>
+
+</body>
+</html>

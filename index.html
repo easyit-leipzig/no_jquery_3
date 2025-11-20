@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>nojquery 3.0.2 — Funktionsdemo & Dokumentation</title>
+<style>
+  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; padding: 18px; background:#f7f8fb; color:#111; }
+  h1 { margin-top:0; }
+  .grid { display:grid; grid-template-columns: 360px 1fr; gap:16px; align-items:start; }
+  .panel { background:white; border-radius:8px; padding:12px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  button{ margin:6px 4px 6px 0; padding:8px 10px; border-radius:6px; border:1px solid #e0e6ef; background:#fff; cursor:pointer; }
+  pre { background:#0f1724; color:#e6eef8; padding:12px; border-radius:6px; overflow:auto; max-height:360px;}
+  .demo-target { padding:12px; border:1px dashed #d6dbe8; border-radius:6px; margin-bottom:8px; }
+  label { display:block; margin-top:8px; font-weight:600;}
+  .row { margin-top:8px; }
+  .small { font-size: 12px; color:#666; }
+  .success { color: green; }
+  .error { color: red; }
+</style>
+</head>
+<body>
+
+<h1>nojquery 3.0.2 — Live Demo & Dokumentation</h1>
+<p class="small">Dieses Demo lädt <code>no_jquery_3.0.2.js</code> (dein Script) und ruft exemplarisch viele Methoden auf. Es ist kein vollständiger Test aller Legacy-Aliases, aber deckt die wichtigsten Funktionen ab.</p>
+
+<div class="grid">
+  <div class="panel" id="controls">
+    <h3>Aktionen</h3>
+
+    <div class="row">
+      <strong>Selektor & DOM</strong>
+      <div class="small">Auswahl, html/text, append/prepend, attributes</div>
+      <button id="btn-select">Select #demoTarget</button>
+      <button id="btn-html">Set .html()</button>
+      <button id="btn-text">Set .text()</button>
+      <button id="btn-append">append()</button>
+      <button id="btn-prepend">prepend()</button>
+      <button id="btn-before">before()</button>
+      <button id="btn-after">after()</button>
+      <button id="btn-remove">remove()</button>
+    </div>
+
+    <div class="row">
+      <strong>Klassen & Style</strong>
+      <div class="small">addClass / removeClass / css / computed</div>
+      <button id="btn-addclass">addClass('demo-highlight')</button>
+      <button id="btn-rmclass">removeClass('demo-highlight')</button>
+      <button id="btn-css">css({border:'2px solid #4f46e5'})</button>
+      <button id="btn-computed">computed('display')</button>
+    </div>
+
+    <div class="row">
+      <strong>Events</strong>
+      <button id="btn-on">on('click')</button>
+      <button id="btn-off">off('click')</button>
+      <button id="btn-trigger">trigger('demoEvent')</button>
+    </div>
+
+    <div class="row">
+      <strong>Form helpers</strong>
+      <div class="small">val(), selectValues(), getSelected()</div>
+      <label>Input (val): <input id="demo-input" value="initial" /></label>
+      <button id="btn-val-get">get val()</button>
+      <button id="btn-val-set">set val('neu')</button>
+
+      <label>Select multiple id="demo-select">
+        <select id="demo-select" multiple style="width:100%">
+          <option value="a">Alpha</option>
+          <option value="b">Beta</option>
+          <option value="c">Gamma</option>
+        </select>
+      </label>
+      <button id="btn-sel-set">selectValues(['b','c'])</button>
+      <button id="btn-sel-get">getSelected()</button>
+    </div>
+
+    <div class="row">
+      <strong>AJAX</strong>
+      <div class="small">AJAX POST JSON & FormData (zeigt Antwort)</div>
+      <button id="btn-ajax-json">nj.ajax.post JSON → library/php/api.php</button>
+      <button id="btn-ajax-form">nj.ajax.postForm → library/php/api.php</button>
+    </div>
+
+    <div class="row">
+      <strong>Cookies</strong>
+      <button id="btn-cookie-set">set cookie</button>
+      <button id="btn-cookie-get">get cookie</button>
+      <button id="btn-cookie-remove">remove cookie</button>
+    </div>
+
+    <div class="row">
+      <strong>Animation</strong>
+      <button id="btn-fadein">fadeIn()</button>
+      <button id="btn-fadeout">fadeOut()</button>
+      <button id="btn-slideup">slideUp()</button>
+      <button id="btn-slidedown">slideDown()</button>
+    </div>
+
+    <div class="row">
+      <strong>Utilities</strong>
+      <button id="btn-isjson">nj.isJ('{ \"a\":1 }')</button>
+      <button id="btn-deepeq">nj.cEq({x:1},{x:1})</button>
+      <button id="btn-detect">nj.gBr()</button>
+    </div>
+
+  </div>
+
+  <div class="panel">
+    <h3>Demo-Area</h3>
+
+    <div id="demoTarget" class="demo-target">
+      <strong>demoTarget</strong>
+      <div id="demoTargetInner">Inhalt</div>
+    </div>
+
+    <div>
+      <h4>Log</h4>
+      <pre id="log">Ready.</pre>
+    </div>
+
+    <h4>Quick docs / Hinweise</h4>
+    <ul>
+      <li>Das Demo ruft intern die Factory <code>nj()</code> und Methoden des <code>NJ.prototype</code> auf.</li>
+      <li>AJAX-Endpoint ist <code>library/php/api.php</code> (same folder) und erwartet POST.</li>
+      <li>Warnung: <code>nj.exec</code> führt beliebigen Code aus — nicht in Produktivumgebungen ohne Review verwenden.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- load your script (same folder) -->
+<script src="library/javascript/no_jquery_3.0.3.js"></script>
+
+<script>
+(function(){
+  const log = (s) => {
+    const el = document.getElementById('log');
+    el.textContent = new Date().toLocaleTimeString() + ' › ' + s + '\n' + el.textContent;
+  };
+
+  // helpers
+  const $t = () => nj('#demoTarget');
+  const $inner = () => nj('#demoTargetInner');
+
+  // DOM actions
+  document.getElementById('btn-select').addEventListener('click', () => {
+    const el = nj('#demoTarget').elements.length;
+    log('Select #demoTarget -> elements length: ' + el);
+  });
+  document.getElementById('btn-html').addEventListener('click', () => {
+    $inner().html('<em>HTML gesetzt: ' + new Date().toLocaleTimeString() + '</em>');
+    log('.html() gesetzt');
+  });
+  document.getElementById('btn-text').addEventListener('click', () => {
+    $inner().text('Reiner Text: ' + new Date().toLocaleTimeString());
+    log('.text() gesetzt');
+  });
+  document.getElementById('btn-append').addEventListener('click', () => {
+    $inner().append('<span> ++ appended</span>');
+    log('append() aufgerufen');
+  });
+  document.getElementById('btn-prepend').addEventListener('click', () => {
+    $inner().prepend('<span>prepended ++ </span>');
+    log('prepend() aufgerufen');
+  });
+  document.getElementById('btn-before').addEventListener('click', () => {
+    nj('#demoTarget').before('<div class="panel">Inserted before</div>');
+    log('before() aufgerufen');
+  });
+  document.getElementById('btn-after').addEventListener('click', () => {
+    nj('#demoTarget').after('<div class="panel">Inserted after</div>');
+    log('after() aufgerufen');
+  });
+  document.getElementById('btn-remove').addEventListener('click', () => {
+    // re-create demoTarget if removed
+    const dt = nj('#demoTarget');
+    if (dt.isE && dt.isE()) {
+      dt.remove();
+      log('#demoTarget entfernt (remove())');
+      setTimeout(() => {
+        const container = document.querySelector('body');
+        const node = document.createElement('div');
+        node.id = 'demoTarget';
+        node.className = 'demo-target';
+        node.innerHTML = '<strong>demoTarget</strong><div id="demoTargetInner">neu erstellt</div>';
+        document.body.insertBefore(node, container.querySelector('.grid'));
+        log('#demoTarget neu angelegt');
+      }, 500);
+    } else {
+      log('#demoTarget nicht vorhanden');
+    }
+  });
+
+  // classes & css
+  document.getElementById('btn-addclass').addEventListener('click', () => {
+    $t().addClass('demo-highlight');
+    log('addClass demo-highlight');
+  });
+  document.getElementById('btn-rmclass').addEventListener('click', () => {
+    $t().removeClass('demo-highlight');
+    log('removeClass demo-highlight');
+  });
+  document.getElementById('btn-css').addEventListener('click', () => {
+    $t().css({ border: '2px solid #4f46e5', padding: '8px' });
+    log('css() gesetzt');
+  });
+  document.getElementById('btn-computed').addEventListener('click', () => {
+    const v = $t().computed('display');
+    log('computed(display) = ' + v);
+  });
+
+  // events
+  function demoHandler(){ log('demoTarget clicked (handler)'); }
+  document.getElementById('btn-on').addEventListener('click', () => {
+    $t().on('click', demoHandler);
+    log('on(click) gesetzt');
+  });
+  document.getElementById('btn-off').addEventListener('click', () => {
+    $t().off('click', demoHandler);
+    log('off(click) entfernt');
+  });
+  document.getElementById('btn-trigger').addEventListener('click', () => {
+    $t().trigger('demoEvent');
+    log('trigger(demoEvent) aufgerufen');
+  });
+
+  // forms
+  document.getElementById('btn-val-get').addEventListener('click', () => {
+    const v = nj('#demo-input').val();
+    log('val() -> ' + v);
+  });
+  document.getElementById('btn-val-set').addEventListener('click', () => {
+    nj('#demo-input').val('neu-' + Date.now());
+    log('val() gesetzt');
+  });
+  document.getElementById('btn-sel-set').addEventListener('click', () => {
+    nj('#demo-select').selectValues(['b','c']);
+    log('selectValues gesetzt');
+  });
+  document.getElementById('btn-sel-get').addEventListener('click', () => {
+    const arr = nj('#demo-select').getSelected();
+    log('getSelected() -> ' + JSON.stringify(arr));
+  });
+
+  // ajax (JSON)
+  document.getElementById('btn-ajax-json').addEventListener('click', () => {
+    const data = { action:'echo', ts: Date.now(), note: 'test json' };
+    nj.ajax.post('library/php/api.php', data).then(res => {
+      log('AJAX JSON success -> ' + JSON.stringify(res));
+    }).catch(err => {
+      log('AJAX JSON error -> ' + err);
+    });
+  });
+
+  // ajax (FormData)
+  document.getElementById('btn-ajax-form').addEventListener('click', () => {
+    const formObj = { action:'formEcho', ts: Date.now(), text: 'form-data test' };
+    nj.ajax.postForm('library/php/api.php', formObj).then(res => {
+      log('AJAX form success -> ' + res);
+    }).catch(err => {
+      log('AJAX form error -> ' + err);
+    });
+  });
+
+  // cookies
+  document.getElementById('btn-cookie-set').addEventListener('click', () => {
+    nj.cookie.set('nj_demo', 'val_' + Date.now(), 1);
+    log('cookie gesetzt');
+  });
+  document.getElementById('btn-cookie-get').addEventListener('click', () => {
+    const v = nj.cookie.get('nj_demo');
+    log('cookie get -> ' + v);
+  });
+  document.getElementById('btn-cookie-remove').addEventListener('click', () => {
+    nj.cookie.remove('nj_demo');
+    log('cookie entfernt');
+  });
+
+  // animation
+  document.getElementById('btn-fadein').addEventListener('click', () => {
+    $t().fadeIn(400);
+    log('fadeIn()');
+  });
+  document.getElementById('btn-fadeout').addEventListener('click', () => {
+    $t().fadeOut(400);
+    log('fadeOut()');
+  });
+  document.getElementById('btn-slideup').addEventListener('click', () => {
+    $t().slideUp(400);
+    log('slideUp()');
+  });
+  document.getElementById('btn-slidedown').addEventListener('click', () => {
+    $t().slideDown(400);
+    log('slideDown()');
+  });
+
+  // utilities
+  document.getElementById('btn-isjson').addEventListener('click', () => {
+    log('isJSON -> ' + nj.isJ('{"a":1}'));
+  });
+  document.getElementById('btn-deepeq').addEventListener('click', () => {
+    log('deepEqual -> ' + nj.cEq({x:1},{x:1}));
+  });
+  document.getElementById('btn-detect').addEventListener('click', () => {
+    log('Browser detect -> ' + nj.gBr());
+  });
+
+})();
+</script>
+
+</body>
+</html>
